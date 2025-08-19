@@ -1,0 +1,13 @@
+# Ignore build output
+target/
+*.class
+
+# Logs
+*.log
+
+# IDE configs
+*.iml
+.idea/
+.project
+.classpath
+.settings/
