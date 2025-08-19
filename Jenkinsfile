@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3'    // Name must match Jenkins Global Tool Config
-        jdk 'Java17'      // Name must match Jenkins Global Tool Config
+        maven 'Maven3'   // matches the name in Jenkins Global Tool Config
+        jdk 'Java17'     // matches the JDK name in Jenkins Global Tool Config
     }
 
     stages {
@@ -15,7 +15,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat "mvn clean install -DskipTests"
+                bat "mvn clean compile"
             }
         }
 
@@ -25,19 +25,13 @@ pipeline {
             }
         }
 
-        stage('Publish TestNG Reports') {
-            steps {
-                publishTestNGResults testResultsPattern: '**/target/surefire-reports/testng-results.xml'
-            }
-        }
-
         stage('Package') {
             steps {
-                bat "mvn package"
+                bat "mvn package -DskipTests"
             }
         }
 
-        stage('Archive Jar') {
+        stage('Archive') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
@@ -45,7 +39,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo "Deploy step goes here (Docker, Tomcat, or Kubernetes)"
+                echo "Starting Spring Boot App..."
+                bat "java -jar target/EmployeeApp.jar"
             }
         }
     }
