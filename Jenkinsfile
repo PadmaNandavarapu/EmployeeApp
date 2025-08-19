@@ -2,46 +2,61 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3'
-        jdk 'Java17'
+        maven 'M3'    // make sure Maven is installed in Jenkins (Manage Jenkins → Global Tool Configuration)
+        jdk 'JDK11'   // adjust to your installed JDK (e.g., JDK17, JDK8)
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/PadmaNandavarapu/EmployeeApp.git'
+                git branch: 'main', url: 'https://github.com/PadmaNandavarapu/EmployeeApp.git'
             }
         }
 
         stage('Build') {
             steps {
-                bat "mvn clean install"
+                echo 'Building project...'
+                bat "mvn clean compile"
             }
         }
 
         stage('Test') {
             steps {
+                echo 'Running tests...'
                 bat "mvn test"
             }
         }
 
         stage('Package') {
             steps {
-                bat "mvn package"
+                echo 'Packaging application...'
+                bat "mvn package -DskipTests"
             }
         }
 
         stage('Archive Artifacts') {
             steps {
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Starting Spring Boot App...'
-                bat 'for %i in (target\\*.jar) do java -jar "%i"'
+                echo 'Deploying application...'
+                // Add your deploy script/command here
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished (success/failure).'
+        }
+        success {
+            echo 'Build succeeded ✅'
+        }
+        failure {
+            echo 'Build failed ❌'
         }
     }
 }
