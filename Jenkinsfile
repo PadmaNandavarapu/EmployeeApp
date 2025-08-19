@@ -38,10 +38,12 @@ pipeline {
         }
 
         stage('Deploy') {
-            steps {
-                echo "Starting Spring Boot App..."
-                bat "java -jar target/EmployeeApp.jar"
-            }
+    steps {
+        echo 'Starting Spring Boot App...'
+        bat "java -jar target/employee-app-1.0-SNAPSHOT.jar"
+    }
+}
+
         }
     }
 }
