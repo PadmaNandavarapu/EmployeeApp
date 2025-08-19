@@ -37,6 +37,12 @@ pipeline {
             }
         }
 
+        stage('Archive Jar') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+
         stage('Deploy') {
             steps {
                 echo "Deploy step goes here (Docker, Tomcat, or Kubernetes)"
