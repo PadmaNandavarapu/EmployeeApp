@@ -1,30 +1,36 @@
 pipeline {
     agent any
+
     tools {
-        maven 'Maven3'   // matches your Jenkins Global Tool Configuration
-        jdk 'Java17'     // matches your Jenkins Global Tool Configuration
+        jdk 'Java17'
+        maven 'Maven3'
     }
+
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/PadmaNandavarapu/EmployeeApp.git'
             }
         }
+
         stage('Build') {
             steps {
-                sh "mvn clean install"
+                bat "mvn clean compile"
             }
         }
+
         stage('Test') {
             steps {
-                sh "mvn test"
+                bat "mvn test"
             }
         }
+
         stage('Package') {
             steps {
-                sh "mvn package"
+                bat "mvn package"
             }
         }
+
         stage('Archive Artifacts') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
